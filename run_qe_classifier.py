@@ -26,7 +26,7 @@ import optimization
 import tokenization
 import tensorflow as tf
 import random
-import json
+import json,time
 
 flags = tf.flags
 
@@ -331,6 +331,7 @@ class ClueWebProcessor(DataProcessor):
         train_files = ["{}.trec.with_json".format(i) for i in self.train_folds]
 
         qrel_file = open(os.path.join(data_dir, "qrels"))
+        print('qrel_file:', qrel_file)
         qrels = self._read_qrel(qrel_file)
         tf.logging.info("Qrel size: {}".format(len(qrels)))
 
@@ -340,11 +341,19 @@ class ClueWebProcessor(DataProcessor):
 
         for file_name in train_files:
             train_file = open(os.path.join(data_dir, file_name))
+            print('train_file:',train_file)
             for i, line in enumerate(train_file):
                 items = line.strip().split('#')
+                print('items:',item)
+                
                 trec_line = items[0]
+                
 
                 qid, _, docid, r, _, _ = trec_line.strip().split(' ')
+                print('trec_line:',trec_line)
+                print('trec_line.strip().split(' '):',trec_line.strip().split(' '))
+                time.sleep(20)
+                
                 assert qid in qid2queries, "QID {} not found".format(qid)
                 q_json_dict = qid2queries[qid]
                 q_text_list = [tokenization.convert_to_unicode(q_json_dict[field]) for field in self.q_fields]
